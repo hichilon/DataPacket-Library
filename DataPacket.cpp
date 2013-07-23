@@ -22,8 +22,8 @@ void DataPacket::print_packet(SoftwareSerial& OpenLog){
 	OpenLog.println(_temp);
 	OpenLog.println(_humidity);
 	OpenLog.println(_lowpulseoccupancy);
-    OpenLog.println(_ratio);
-    OpenLog.println(_concentration);
+    	OpenLog.println(_ratio);
+    	OpenLog.println(_concentration);
 	OpenLog.println(_airquality);
 }
 
