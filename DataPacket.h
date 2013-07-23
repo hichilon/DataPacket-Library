@@ -1,12 +1,13 @@
 #ifndef DataPacket_h
 #define DataPacket_h
+#include <SoftwareSerial.h>
 
 #include "Arduino.h"
 
 class DataPacket{
 	public:
 		DataPacket();
-		void print_packet();
+		void print_packet(SoftwareSerial& OpenLog);
 		float get_temp();
 		float get_humid();
 		unsigned long get_lowpulseoccupancy();

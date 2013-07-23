@@ -2,6 +2,7 @@
 /*
   Include Libraries
 */
+#include <SoftwareSerial.h>
 #include "Arduino.h"
 #include <DHT.h>
 #include <DataPacket.h>
@@ -24,6 +25,7 @@
 DHT DHT_SENSOR (TEMP_HUMIDITY_SENSOR_PIN, 22);
 AirQuality AIRQUALITY_SENSOR;
 DataPacket PACKET;
+SoftwareSerial OpenLog(2, 3); // RX, TX
 
 int current_airquality = -1;
 unsigned long starttime;
@@ -45,6 +47,8 @@ void setup () {
   
   //Air Quality
   AIRQUALITY_SENSOR.init(AIRQUALITY_PIN);
+  
+  OpenLog.begin(9600);
 }
 
 //Get sensor data
@@ -90,17 +94,20 @@ void get_airquality(DataPacket& PACKET,AirQuality& AIRQUALITY_SENSOR){
 //Function Definitions
 int init_error_state () {
   Serial.println("We should never be here.");
+  OpenLog.println("We should never be here.");
   return -2;
 }
 
 
 int power_on () {
   Serial.println("Powering up.");
+  OpenLog.println("Powering up.");
   return READ_SENSOR_STATE;
 }
 
 int read_sensor (DataPacket& PACKET,AirQuality& AIRQUALITY_SENSOR) {
   Serial.println("Reading data.");
+  OpenLog.println("Reading data.");
   delay(D);
   get_temp(PACKET);
   get_humid(PACKET);
@@ -110,8 +117,8 @@ int read_sensor (DataPacket& PACKET,AirQuality& AIRQUALITY_SENSOR) {
   return SAVE_DATA_STATE;
 }
 
-int show_data (DataPacket& PACKET) {
-  PACKET.print_packet();
+int show_data (DataPacket& PACKET,SoftwareSerial& OpenLog) {
+  PACKET.print_packet(OpenLog);
   return POWER_ON_STATE;
 }
 
@@ -124,7 +131,7 @@ void loop () {
   STATE (-1, init_error_state());
   STATE (POWER_ON_STATE,     power_on());
   STATE (READ_SENSOR_STATE,   read_sensor(PACKET,AIRQUALITY_SENSOR));
-  STATE (SAVE_DATA_STATE,  show_data(PACKET));
+  STATE (SAVE_DATA_STATE,  show_data(PACKET,OpenLog));
 }
 
 ISR(TIMER2_OVF_vect){

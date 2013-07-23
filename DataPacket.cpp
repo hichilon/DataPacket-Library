@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "DataPacket.h"
+#include <SoftwareSerial.h>
 
 DataPacket::DataPacket(){
 	_temp = 0.0;
@@ -10,13 +11,20 @@ DataPacket::DataPacket(){
 	_airquality = 0;
 }
 
-void DataPacket::print_packet(){
+void DataPacket::print_packet(SoftwareSerial& OpenLog){
 	Serial.println(_temp);
 	Serial.println(_humidity);
 	Serial.println(_lowpulseoccupancy);
 	Serial.println(_ratio);
 	Serial.println(_concentration);
 	Serial.println(_airquality);
+	
+	OpenLog.println(_temp);
+	OpenLog.println(_humidity);
+	OpenLog.println(_lowpulseoccupancy);
+    OpenLog.println(_ratio);
+    OpenLog.println(_concentration);
+	OpenLog.println(_airquality);
 }
 
 int DataPacket::get_airquality(){
